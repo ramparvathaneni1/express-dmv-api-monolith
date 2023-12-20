@@ -186,12 +186,6 @@ app.put('/api/drivers/:driverId', (request, response)=>{
     })
 })
 
-// id integer NOT NULL,
-// vin character varying(50),
-// make_id integer,
-// model_id integer,
-// platetext character varying(50),
-// driver_id integer
 // PLATES ROUTES
 // Plates Index
 app.get('/api/plates', (request, response) => {
