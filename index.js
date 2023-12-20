@@ -150,7 +150,7 @@ app.get('/api/drivers', (request, response) => {
 })
 // Drivers Detail
 app.get('/api/drivers/:driverId', (request, response) => {
-    pool.query('SELECT * FROM drivers WHERE drivers.id = $1 ORDER BY id ASC', [request.params.driverId], (error, results) => {
+    pool.query('SELECT * FROM drivers WHERE drivers.id = $1', [request.params.driverId], (error, results) => {
         if (error) throw error;
 
         console.log(results)
@@ -186,15 +186,58 @@ app.put('/api/drivers/:driverId', (request, response)=>{
     })
 })
 
+// id integer NOT NULL,
+// vin character varying(50),
+// make_id integer,
+// model_id integer,
+// platetext character varying(50),
+// driver_id integer
 // PLATES ROUTES
+// Plates Index
 app.get('/api/plates', (request, response) => {
-    pool.query('SELECT * FROM plates JOIN makes ON plates.Make_Id = makes.make_id JOIN models ON plates.Model_Id = models.model_id JOIN drivers ON plates.driver_id = drivers.id ORDER BY plates.id ASC', (error, results) => {
+    pool.query('SELECT plates.*, makes.*, models.*, drivers.first_name, drivers.last_name, drivers.email, drivers.street, drivers.city, drivers.state, drivers.licensenumber, drivers.licenseexpire FROM plates JOIN makes ON plates.make_id = makes.make_id JOIN models ON plates.model_id = models.model_id JOIN drivers ON plates.driver_id = drivers.id ORDER BY plates.id ASC', (error, results) => {
         if (error) throw error;
 
         console.log(results)
         response.status(200).json(results.rows)
     })
 })
+// Plates Detail
+app.get('/api/plates/:plateId', (request, response) => {
+    pool.query('SELECT plates.*, makes.*, models.*, drivers.first_name, drivers.last_name, drivers.email, drivers.street, drivers.city, drivers.state, drivers.licensenumber, drivers.licenseexpire FROM plates JOIN makes ON plates.make_id = makes.make_id JOIN models ON plates.model_id = models.model_id JOIN drivers ON plates.driver_id = drivers.id WHERE plates.id = $1', [request.params.plateId], (error, results) => {
+        if (error) throw error;
 
+        console.log(results)
+        response.status(200).json(results.rows)
+    })
+})
+// plates Create
+app.post('/api/plates', (request, response)=>{
+    const { vin, make_id, model_id, platetext, driver_id } = request.body;
+    
+    pool.query('INSERT INTO plates (vin, make_id, model_id, platetext, driver_id) VALUES ($1, $2, $3, $4, $5) RETURNING *', [vin, make_id, model_id, platetext, driver_id], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
+// plates Delete
+app.delete('/api/plates/:plateId', (request, response)=>{
+    pool.query('DELETE FROM plates WHERE plates.id = $1', [request.params.plateId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(200).send(`Successfully deleted plate with id ${request.params.plateId}`);
+    })
+})
+// Plates Update
+app.put('/api/plates/:plateId', (request, response)=>{
+    const { vin, make_id, model_id, platetext, driver_id } = request.body;
+
+    pool.query('UPDATE plates SET vin = $1, make_id = $2, model_id = $3, platetext = $4, driver_id = $5 WHERE id = $6 RETURNING *', [vin, make_id, model_id, platetext, driver_id, request.params.plateId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
 // This tells the express application to listen for requests on port 3001
 app.listen("3001", () => {});
