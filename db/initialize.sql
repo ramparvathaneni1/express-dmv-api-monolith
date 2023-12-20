@@ -4,6 +4,11 @@
 
 -- Dumped from database version 14.10 (Homebrew)
 -- Dumped by pg_dump version 14.10 (Homebrew)
+DROP TABLE IF EXISTS plates;
+DROP TABLE IF EXISTS drivers;
+DROP TABLE IF EXISTS models;
+DROP TABLE IF EXISTS makes;
+
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -45,7 +50,7 @@ ALTER TABLE public.drivers OWNER TO postgres;
 
 CREATE SEQUENCE public.drivers_id_seq
     AS integer
-    START WITH 1
+    START 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -79,7 +84,7 @@ ALTER TABLE public.makes OWNER TO "postgres";
 
 CREATE SEQUENCE public.makes_make_id_seq
     AS integer
-    START WITH 1
+    START WITH 100000
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -114,7 +119,7 @@ ALTER TABLE public.models OWNER TO postgres;
 
 CREATE SEQUENCE public.models_model_id_seq
     AS integer
-    START WITH 1
+    START WITH 10000
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -152,7 +157,7 @@ ALTER TABLE public.plates OWNER TO postgres;
 
 CREATE SEQUENCE public.plates_id_seq
     AS integer
-    START WITH 1
+    START WITH 100
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
@@ -40634,28 +40639,28 @@ COPY public.plates (id, vin, make_id, model_id, platetext, driver_id) FROM stdin
 -- Name: drivers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.drivers_id_seq', 1, false);
+SELECT pg_catalog.setval('public.drivers_id_seq', 1001, false);
 
 
 --
 -- Name: makes_make_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.makes_make_id_seq', 1, false);
+SELECT pg_catalog.setval('public.makes_make_id_seq', 100000, false);
 
 
 --
 -- Name: models_model_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.models_model_id_seq', 1, false);
+SELECT pg_catalog.setval('public.models_model_id_seq', 100000, false);
 
 
 --
 -- Name: plates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.plates_id_seq', 1, false);
+SELECT pg_catalog.setval('public.plates_id_seq', 101, false);
 
 
 --

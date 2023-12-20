@@ -24,6 +24,7 @@ app.use(cors());
 
 // We will be using JSON objects to communcate with our backend, no HTML pages.
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // This route will return 'Hi There' when you go to localhost:3001/ in the browser
 app.get("/", (req, res) => {
@@ -52,11 +53,8 @@ app.get('/api/models', (request, response) => {
 
 // NESTED ROUTE FOR MODELS BELONGING TO ONE MAKE
 app.get('/api/makes/:makeId/models', (request, response) => {
-    // ensure the makeId is a number
-    if(isNaN(parseInt(request.params.makeId))){
-        throw new Error("makeId must be a valid number")
-    }
-    pool.query(`SELECT * FROM models JOIN makes ON models.make_id = makes.make_id  WHERE models.make_id = ${request.params.makeId} ORDER BY models.model_id ASC`, (error, results) => {
+
+    pool.query('SELECT * FROM models JOIN makes ON models.make_id = makes.make_id  WHERE models.make_id = $1 ORDER BY models.model_id ASC', [request.params.makeId], (error, results) => {
         if (error) throw error;
 
         console.log(results)
@@ -65,12 +63,50 @@ app.get('/api/makes/:makeId/models', (request, response) => {
 })
 
 // DRIVERS ROUTES
+// Drivers Index
 app.get('/api/drivers', (request, response) => {
     pool.query('SELECT * FROM drivers ORDER BY id ASC', (error, results) => {
         if (error) throw error;
 
         console.log(results)
         response.status(200).json(results.rows)
+    })
+})
+// Drivers Detail
+app.get('/api/drivers/:driverId', (request, response) => {
+    pool.query('SELECT * FROM drivers WHERE drivers.id = $1 ORDER BY id ASC', [request.params.driverId], (error, results) => {
+        if (error) throw error;
+
+        console.log(results)
+        response.status(200).json(results.rows)
+    })
+})
+// Drivers Create
+app.post('/api/drivers', (request, response)=>{
+    const { first_name, last_name, email, street, city, state, licensenumber, licenseexpire } = request.body;
+    
+    pool.query('INSERT INTO drivers (first_name, last_name, email, street, city, state, licensenumber, licenseexpire) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [first_name, last_name, email, street, city, state, licensenumber, licenseexpire], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
+// Drivers Delete
+app.delete('/api/drivers/:driverId', (request, response)=>{
+    pool.query('DELETE FROM drivers WHERE drivers.id = $1', [request.params.driverId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(200).send(`Successfully deleted driver with id ${request.params.driverId}`);
+    })
+})
+// Drivers Update
+app.put('/api/drivers/:driverId', (request, response)=>{
+    const { first_name, last_name, email, street, city, state, licensenumber, licenseexpire } = request.body;
+    
+    pool.query('UPDATE drivers SET first_name = $1, last_name = $2, email = $3, street = $4, city = $5, state = $6, licensenumber = $7, licenseexpire = $8 WHERE id = $9 RETURNING *', [first_name, last_name, email, street, city, state, licensenumber, licenseexpire, request.params.driverId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
     })
 })
 
