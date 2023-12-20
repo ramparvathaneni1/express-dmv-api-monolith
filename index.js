@@ -32,12 +32,50 @@ app.get("/", (req, res) => {
 });
 
 // MAKES ROUTES
+// Makes Index
 app.get('/api/makes', (request, response) => {
     pool.query('SELECT * FROM makes ORDER BY make_id ASC', (error, results) => {
         if (error) throw error;
 
         console.log(results)
         response.status(200).json(results.rows)
+    })
+})
+// Makes Detail
+app.get('/api/makes/:makeId', (request, response) => {
+    pool.query('SELECT * FROM makes WHERE makes.make_id = $1', [request.params.makeId], (error, results) => {
+        if (error) throw error;
+
+        console.log(results)
+        response.status(200).json(results.rows)
+    })
+})
+// Makes Create
+app.post('/api/makes', (request, response)=>{
+    const { make_name } = request.body;
+    
+    pool.query('INSERT INTO makes (make_name) VALUES ($1) RETURNING *', [make_name], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
+// Makes Delete
+app.delete('/api/makes/:makeId', (request, response)=>{
+    pool.query('DELETE FROM makes WHERE makes.make_id = $1', [request.params.makeId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(200).send(`Successfully deleted make with id ${request.params.makeId}`);
+    })
+})
+// Makes Update
+app.put('/api/makes/:makeId', (request, response)=>{
+    const { make_name } = request.body;
+    
+    pool.query('UPDATE makes SET make_name = $1 WHERE make_id = $2 RETURNING *', [make_name, request.params.makeId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
     })
 })
 
