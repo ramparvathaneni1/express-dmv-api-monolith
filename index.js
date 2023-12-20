@@ -100,6 +100,44 @@ app.get('/api/makes/:makeId/models', (request, response) => {
     })
 })
 
+// Models Detail
+app.get('/api/models/:modelId', (request, response) => {
+    pool.query('SELECT * FROM models JOIN makes ON models.make_id = makes.make_id WHERE models.model_id = $1', [request.params.modelId], (error, results) => {
+        if (error) throw error;
+
+        console.log(results)
+        response.status(200).json(results.rows)
+    })
+})
+// Models Create
+app.post('/api/models', (request, response)=>{
+    const { model_name, make_id } = request.body;
+    
+    pool.query('INSERT INTO models (model_name, make_id) VALUES ($1, $2) RETURNING *', [model_name, make_id], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
+// Models Delete
+app.delete('/api/models/:modelId', (request, response)=>{
+    pool.query('DELETE FROM models WHERE models.model_id = $1', [request.params.modelId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(200).send(`Successfully deleted model with id ${request.params.modelId}`);
+    })
+})
+// Models Update
+app.put('/api/models/:modelId', (request, response)=>{
+    const { model_name, make_id } = request.body;
+    
+    pool.query('UPDATE models SET model_name = $1, make_id = $2 WHERE model_id = $3 RETURNING *', [model_name, make_id, request.params.modelId], (error, results)=>{
+        if (error) throw error;
+        console.log(results);
+        response.status(201).json(results)
+    })
+})
+
 // DRIVERS ROUTES
 // Drivers Index
 app.get('/api/drivers', (request, response) => {
