@@ -2,9 +2,17 @@
 
 ## Installation Instructions
 
-Create a postgresql database named `dmv_app_db` owned by the `postgres` user.
+Create a postgresql database named `dmv_app_db` owned by the `postgres` user. Use the password `postgres`.
+
+```
+createdb dmv_app_db -U postgres
+```
 
 Execute the `db/initialize.sql` file to populate the local database.
+
+```
+psql -U postgres dmv_app_db < db/initialize.sql 
+```
 
 Run `npm install` to install node_modules, and `npm start` to start the app.
 
