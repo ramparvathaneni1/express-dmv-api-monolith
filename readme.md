@@ -15,6 +15,7 @@ psql -U postgres dmv_app_db < db/initialize.sql
 ```
 
 Run `npm install` to install node_modules, and `npm start` to start the app.
+If you get a message that a port is in use, you can kill it with this command: `sudo kill -9 $(sudo lsof -t -i:3001)`
 
 ## API Endpoints
 
