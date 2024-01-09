@@ -49,7 +49,6 @@ ALTER TABLE public.drivers OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.drivers_id_seq
-    AS integer
     START 1
     INCREMENT BY 1
     NO MINVALUE
@@ -83,7 +82,6 @@ ALTER TABLE public.makes OWNER TO "postgres";
 --
 
 CREATE SEQUENCE public.makes_make_id_seq
-    AS integer
     START WITH 100000
     INCREMENT BY 1
     NO MINVALUE
@@ -118,7 +116,6 @@ ALTER TABLE public.models OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.models_model_id_seq
-    AS integer
     START WITH 10000
     INCREMENT BY 1
     NO MINVALUE
@@ -156,7 +153,6 @@ ALTER TABLE public.plates OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.plates_id_seq
-    AS integer
     START WITH 100
     INCREMENT BY 1
     NO MINVALUE
