@@ -8,23 +8,22 @@ To resolve a PostgreSQL authentication error by setting the authentication metho
    In the terminal, run:
 
    `sudo vi /var/lib/pgsql/data/pg_hba.conf`
-   <br>
 
    This command opens the `pg_hba.conf` file in vi editor with superuser privileges.
 
 2. **Enter Insert Mode**:
-   - Press `i` to enter insert mode in vi, which allows you to make changes to the file.
+- Press `i` to enter insert mode in vi, which allows you to make changes to the file.
 
-   ![](./assets//postgres-before.png)
+   ![postgres-before](./assets/postgres-before.png)
 
 3. **Edit Authentication Method**:
-   - Find the line corresponding to the `postgres` user, typically:
+- Find the line corresponding to the `postgres` user, typically:
    ```
    local   all   postgres   peer
    ```
    ![](./assets/postgres-before.png)
 
-- Change `peer` to `md5`:
+  - Change `peer` to `md5`:
   ```
   local   all   postgres   md5
   ```
@@ -35,8 +34,6 @@ To resolve a PostgreSQL authentication error by setting the authentication metho
    - Type `:wq` and then press `Enter` to save the changes and close the editor.
 
    ![](./assets/postgres-wq.png)
-
-   <br>
 
 5. **Restart PostgreSQL**:
 Restart the PostgreSQL service to apply changes:
