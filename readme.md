@@ -53,7 +53,7 @@ Create a postgresql database named `dmv_app_db` owned by the `postgres` user. Us
 ```
 createdb dmv_app_db -U postgres
 ```
-## Fixing PostgreSQL Authentication Error
+### Receiving Authentication Failed Message?
 
 * Make sure that you have spelled the password correct which should be **postgres**
 
