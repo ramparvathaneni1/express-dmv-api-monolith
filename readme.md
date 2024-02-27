@@ -1,5 +1,27 @@
 # DMV Express API
 
+## Clone This Repository To Your Local Machine
+
+1. `cd` into your `mef` folder run the command:
+   ```
+   cd mef
+   ```
+2. Go to the `code` green icon and select ssh.  Then click on the clipboard icon to copy the url
+
+   ![](./assets/git-clone-dmv-express.png)
+
+3. Inside of your terminal enter the command
+
+   ```bash
+   git clone git@git.generalassemb.ly:ModernEngineering/express-dmv-api-monolith.git
+   ```
+
+4. `cd` into the `express-dmv-api-monolith` directory run the command:
+   ```bash
+      cd express-dmv-api-monolith/
+   ```
+
+
 ## Fixing PostgreSQL Authentication Error
 
 To resolve a PostgreSQL authentication error by setting the authentication method to `md5`, follow these steps:
@@ -7,36 +29,37 @@ To resolve a PostgreSQL authentication error by setting the authentication metho
 1. **Open `pg_hba.conf` for Editing**:
    In the terminal, run:
 
-   `sudo vi /var/lib/pgsql/data/pg_hba.conf`
+   `sudo code /var/lib/pgsql/data/pg_hba.conf --user-data-dir='.' --no-sandbox`
 
-   This command opens the `pg_hba.conf` file in vi editor with superuser privileges.
+   This command opens the `pg_hba.conf` file in vs code editor with superuser privileges.
 
-2. **Enter Insert Mode**:
-- Press `i` to enter insert mode in vi, which allows you to make changes to the file.
+2. **Update pg_hba.conf file**:
+- Inside the vs code editor copy and paste below the **Put Your Actual Configuration Here.**  Section
 
-   ![postgres-before](./assets/postgres-before.png)
 
-3. **Edit Authentication Method**:
-- Find the line corresponding to the `postgres` user, typically:
+   ```sql
+   # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+   host                all        postgres   127.0.0.1/32   md5
+   local               all        postgres                  md5
+   host                all        all        0.0.0.0/0      md5
+   host                all        all        localhost      md5
+
+
+
+   # "local" is for Unix domain socket connections only
+   local   all             all                                     md5
+   # IPv4 local connections:
+   host    all             all             127.0.0.1/32            ident
+   # IPv6 local connections:
+   host    all             all             ::1/128                 ident
    ```
-   local   all   postgres   peer
-   ```
-   ![](./assets/postgres-before.png)
 
-  - Change `peer` to `md5`:
-  ```
-  local   all   postgres   md5
-  ```
-  ![](./assets/postgres-md5.png)
+5. **Save and Exit**:
+   - Go to File on the top right of vs code and select save.
 
-4. **Save and Exit**:
-   - Press `Esc` to exit insert mode and return to command mode.
-   - Type `:wq` and then press `Enter` to save the changes and close the editor.
-
-   ![](./assets/postgres-wq.png)
-
-5. **Restart PostgreSQL**:
-Restart the PostgreSQL service to apply changes:
+6. **Restart PostgreSQL**:
+- Restart the PostgreSQL service to apply changes:
 
    - `sudo systemctl restart postgresql`
 
@@ -49,7 +72,7 @@ Now, PostgreSQL will use `md5` authentication for the `postgres` user.
 
 Create a postgresql database named `dmv_app_db` owned by the `postgres` user. Use the password `postgres`.
 
-
+*in the terminal enter the commands*
 ```
 createdb dmv_app_db -U postgres
 ```
@@ -83,7 +106,7 @@ For example, the following routes are available for drivers:
 | GET      | /api/drivers/:driverId       | The driver with the specified id |
 | POST      | /api/drivers       | A new driver is created |
 | PUT      | /api/drivers/:driverId       | The driver with the specified id is updated |
-| DELETE     | /api/drivers       | The driver with the specified id is deleted |
+| DELETE     | /api/drivers/:driverId       | The driver with the specified id is deleted |
 
 There is also a special **nested** resource route, allowing users to query for all models belonging to a given make:
 
